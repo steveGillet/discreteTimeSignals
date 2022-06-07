@@ -3,8 +3,6 @@ from numpy import int64
 import matplotlib.pyplot as plt
 
 class Signal:
-  dv = 0
-  iv = 0
   def __init__(self, DVin, IVstart, IVend):
     self.dv = np.array(DVin)
     self.iv = np.arange(IVstart,IVend+1,1)
@@ -91,32 +89,52 @@ class Step(Signal):
     # 1* makes the boolean into int
     self.dv = 1 * (self.iv >= 0)
 
+class Pulse(Signal):
+  def __init__(self, IVstart, IVend, N):
+    self.iv = np.arange(IVstart, IVend+1)
+    # 1* makes the boolean into int
+    self.dv = np.zeros(len(self.iv))
+    for i in range (len(self.iv)):
+      self.dv[i] = 1 * (self.iv[i] >= 0 and self.iv[i] <= N)
+
 class PowerLaw(Signal):
   def __init__(self, IVstart, IVend, A = 1, alpha = 1):
     self.iv = np.arange(IVstart, IVend+1)
     # 1* makes the boolean into int
     self.dv = A * alpha ** self.iv 
 
+class Sinusoid(Signal):
+  def __init__(self, IVstart, IVend, omega = 1):
+    self.iv = np.arange(IVstart, IVend+1)
+    # 1* makes the boolean into int
+    self.dv = np.cos(omega*self.iv) 
+
 
 x = Signal([-1,2,1,-2],-3,0)
 y = Signal([1,2,1,0,1],-2,2)
 
-d = Impulse(-3,3)
-d.scale(3)
-d.plot()
+p = Pulse(-3,3,2)
+p.plot()
 
-w = x * d
-w.plot()
-
-s = Step(-3, 3)
-s.shift(-2)
+s = Sinusoid(-5,5,-9*np.pi/4)
 s.plot()
 
-w2 = x * s
-w2.plot()
+# d = Impulse(-3,3)
+# d.scale(3)
+# d.plot()
 
-pl = PowerLaw(A=5, alpha = -0.75, IVstart = 0, IVend=5)
-pl.plot()
+# w = x * d
+# w.plot()
+
+# s = Step(-3, 3)
+# s.shift(-2)
+# s.plot()
+
+# w2 = x * s
+# w2.plot()
+
+# pl = PowerLaw(A=5, alpha = -0.75, IVstart = 0, IVend=5)
+# pl.plot()
 
 # print('flip')
 # print(x.x)
