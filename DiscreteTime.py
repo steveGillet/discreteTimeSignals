@@ -22,6 +22,7 @@ class Signal:
     else:
       self.dv[:n0] = self.dv[-n0:]
       self.dv[n0:] = 0
+    return self
   def decimate(self, D):
     indShift = 0 - self.iv[0]
     tempdv = np.compress((self.iv % D) == 0,self.dv)
